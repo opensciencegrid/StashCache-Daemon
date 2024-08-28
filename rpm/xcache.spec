@@ -306,6 +306,13 @@ mkdir -p %{buildroot}%{_sysconfdir}/grid-security/xrd
 %config %{_sysconfdir}/xrootd/config.d/03-redir-tuning.cfg
 
 %changelog
+* Wed Aug 28 2024 Matt Westphall <westphall@wisc.edu> - 3.7.1-1
+- Update startup dependency of xcache on stash-authfile (SOFTWARE-5971)
+
+* Fri Mar 22 2024 Mátyás Selmeci <matyas@cs.wisc.edu> - 3.7.0-1
+- Make use of grid-mapfile downloaded from Topology.
+  Requires osg-xrootd >= 3.6-24 (for OSG 3.6) or >= 23-6 (for OSG 23)
+
 * Tue Dec 12 2023 Matt Westphall <westphall@wisc.edu> - 3.6.0-1
 - Make redirector line in cache config customizable (SOFTWARE-5641)
 - check for *.local files in /etc/xrootd in authfile-updater (SOFTWARE-5597)
