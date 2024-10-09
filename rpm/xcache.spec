@@ -1,10 +1,10 @@
 Name:      xcache
 Summary:   XCache scripts and configurations
-Version:   3.6.0
-Release:   1%{?dist}
+Version:   4.0.0
+Release:   0.1%{?dist}
 License:   Apache 2.0
 Group:     Grid
-URL:       https://opensciencegrid.org/docs/
+URL:       https://osg-htc.org/docs/
 Source0:   %{name}-%{version}.tar.gz
 Source1:   https://vdt.cs.wisc.edu/upstream/xcache/3.0.0/python-deps/numpy-1.16.6-cp36-cp36m-manylinux1_x86_64.whl
 Source2:   https://vdt.cs.wisc.edu/upstream/xcache/3.0.0/python-deps/cachetools-3.1.1-py2.py3-none-any.whl
@@ -53,9 +53,6 @@ Requires: vo-client
 Requires: fetch-crl
 Requires: xrootd-scitokens
 
-Provides: stashcache-daemon = %{name}-%{version}
-Obsoletes: stashcache-daemon < 1.0.0
-
 %description
 %{summary}
 
@@ -92,55 +89,6 @@ Requires: python36(x86-64)
 %systemd_preun xcache-consistency-check.service xcache-consistency-check.timer
 %postun -n xcache-consistency-check
 %systemd_postun_with_restart xcache-consistency-check.service xcache-consistency-check.timer
-
-########################################
-%package -n stash-origin
-Summary: The OSG Data Federation origin server
-
-Requires: %{name} = %{version}
-Requires: wget
-Requires: xrootd-client
-
-Provides: stashcache-origin-server = %{name}-%{version}
-Obsoletes: stashcache-origin-server < 1.0.0
-Conflicts: osg-xrootd-standalone
-
-%description -n stash-origin
-%{summary}
-
-%post -n stash-origin
-/bin/systemctl daemon-reload >/dev/null 2>&1 || :
-%systemd_post xrootd@stash-origin.service cmsd@stash-origin.service
-%preun -n stash-origin
-%systemd_preun xrootd@stash-origin.service cmsd@stash-origin.service
-%postun -n stash-origin
-%systemd_postun_with_restart xrootd@stash-origin.service cmsd@stash-origin.service
-
-########################################
-%package -n stash-cache
-Summary: The OSG data federation cache server
-
-Requires: %{name} = %{version}
-Requires: wget
-Requires: xrdcl-http
-Requires: xrootd-tcp-stats
-
-Provides: stashcache-cache-server = %{name}-%{version}
-Provides: stashcache-cache-server-auth = %{name}-%{version}
-Obsoletes: stashcache-cache-server < 1.0.0
-Obsoletes: stashcache-cache-server-auth < 1.0.0
-Conflicts: osg-xrootd-standalone
-
-%description -n stash-cache
-%{summary}
-
-%post -n stash-cache
-/bin/systemctl daemon-reload >/dev/null 2>&1 || :
-%systemd_post xrootd@stash-cache.service stash-authfile@cache.service stash-authfile@cache.timer xrootd@stash-cache-auth.service
-%preun -n stash-cache
-%systemd_preun xrootd@stash-cache.service stash-authfile@cache.service stash-authfile@cache.timer xrootd@stash-cache-auth.service
-%postun -n stash-cache
-%systemd_postun_with_restart xrootd@stash-cache.service stash-authfile@cache.service stash-authfile@cache.timer xrootd@stash-cache-auth.service
 
 ########################################
 %package -n atlas-xcache
@@ -240,44 +188,6 @@ mkdir -p %{buildroot}%{_sysconfdir}/grid-security/xrd
 %config(noreplace) %{_sysconfdir}/xrootd/xcache-consistency-check.cfg
 /usr/lib/xcache-consistency-check/*
 
-%files -n stash-origin
-%config %{_sysconfdir}/xrootd/xrootd-stash-origin.cfg
-%config %{_sysconfdir}/xrootd/xrootd-stash-origin-auth.cfg
-%config %{_sysconfdir}/xrootd/config.d/50-stash-origin-authz.cfg
-%config %{_sysconfdir}/xrootd/config.d/50-stash-origin-paths.cfg
-%config(noreplace) %{_sysconfdir}/xrootd/config.d/10-origin-site-local.cfg
-%{_libexecdir}/%{name}/authfile-update
-%{_unitdir}/stash-authfile@.service
-%{_unitdir}/stash-authfile@.timer
-%{_unitdir}/xrootd@stash-origin.service.d/10-stash-origin-overrides.conf
-%{_unitdir}/xrootd@stash-origin-auth.service.d/10-stash-origin-auth-overrides.conf
-%{_unitdir}/xrootd-privileged@stash-origin-auth.service.d
-%{_unitdir}/cmsd@stash-origin.service.d/10-stash-origin-overrides.conf
-%{_unitdir}/cmsd@stash-origin-auth.service.d/10-stash-origin-auth-overrides.conf
-%{_unitdir}/cmsd-multiuser@.service
-%{_unitdir}/cmsd-privileged@stash-origin-auth.service.d/10-stash-origin-auth-overrides.conf
-%{_tmpfilesdir}/stash-origin.conf
-%attr(0755, xrootd, xrootd) %dir /run/stash-origin/
-%attr(0755, xrootd, xrootd) %dir /run/stash-origin-auth/
-
-%files -n stash-cache
-%config(noreplace) %{_sysconfdir}/xrootd/Authfile-auth
-%config(noreplace) %{_sysconfdir}/xrootd/xcache-robots.txt
-%config %{_sysconfdir}/xrootd/xrootd-stash-cache.cfg
-%config %{_sysconfdir}/xrootd/xrootd-stash-cache-auth.cfg
-%config %{_sysconfdir}/xrootd/config.d/40-stash-cache-plugin.cfg
-%config %{_sysconfdir}/xrootd/config.d/50-stash-cache-authz.cfg
-%config %{_sysconfdir}/xrootd/config.d/50-stash-cache-paths.cfg
-%config(noreplace) %{_sysconfdir}/xrootd/config.d/90-stash-cache-disks.cfg
-%{_libexecdir}/%{name}/authfile-update
-%{_unitdir}/stash-authfile@.service
-%{_unitdir}/stash-authfile@.timer
-%{_unitdir}/xrootd@stash-cache.service.d/10-stash-cache-overrides.conf
-%{_unitdir}/xrootd@stash-cache-auth.service.d/10-stash-cache-auth-overrides.conf
-%{_tmpfilesdir}/stash-cache.conf
-%attr(0755, xrootd, xrootd) %dir /run/stash-cache/
-%attr(0755, xrootd, xrootd) %dir /run/stash-cache-auth/
-
 %files -n atlas-xcache
 %config %{_sysconfdir}/xrootd/xrootd-atlas-xcache.cfg
 %{_unitdir}/xrootd@atlas-xcache.service.d/10-atlas-xcache-overrides.conf
@@ -306,6 +216,9 @@ mkdir -p %{buildroot}%{_sysconfdir}/grid-security/xrd
 %config %{_sysconfdir}/xrootd/config.d/03-redir-tuning.cfg
 
 %changelog
+* Wed Oct 09 2024 Mátyás Selmeci <matyas@cs.wisc.edu> - 4.0.0-0.1
+- Remove stash-cache and stash-origin
+
 * Tue Dec 12 2023 Matt Westphall <westphall@wisc.edu> - 3.6.0-1
 - Make redirector line in cache config customizable (SOFTWARE-5641)
 - check for *.local files in /etc/xrootd in authfile-updater (SOFTWARE-5597)
