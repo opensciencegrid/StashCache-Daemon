@@ -35,8 +35,8 @@ BuildRequires: python3-devel
 BuildRequires: python3-pip
 
 # Necessary for daemon to report back to the OSG Collector.
-BuildRequires: python3-condor
-BuildRequires: python3-xrootd
+#BuildRequires: python3-condor
+#BuildRequires: python3-xrootd
 Requires: python3-condor
 Requires: python3-xrootd
 
