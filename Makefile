@@ -16,7 +16,6 @@ VERSION := 4.0.0
 PYTHON = python
 
 LIBEXEC_FILES := src/xcache-reporter \
-                 src/authfile-update \
                  src/renew-proxy
 INSTALL_LIBEXEC_DIR := usr/libexec/xcache
 XROOTD_CONFIG := $(wildcard configs/atlas-xcache/xrootd/*) \
