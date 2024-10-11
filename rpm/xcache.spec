@@ -5,6 +5,10 @@ Release:   0.1%{?dist}
 License:   Apache 2.0
 Group:     Grid
 URL:       https://osg-htc.org/docs/
+
+# TODO: Find wheels for aarch64
+ExclusiveArch: x86_64
+
 Source0:   %{name}-%{version}.tar.gz
 Source1:   https://vdt.cs.wisc.edu/upstream/xcache/3.0.0/python-deps/numpy-1.16.6-cp36-cp36m-manylinux1_x86_64.whl
 Source2:   https://vdt.cs.wisc.edu/upstream/xcache/3.0.0/python-deps/cachetools-3.1.1-py2.py3-none-any.whl
