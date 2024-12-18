@@ -1,7 +1,7 @@
 Name:      xcache
 Summary:   XCache scripts and configurations
 Version:   3.7.0
-Release:   1%{?dist}
+Release:   2%{?dist}
 License:   Apache 2.0
 Group:     Grid
 URL:       https://osg-htc.org/docs/
@@ -101,7 +101,7 @@ Requires: python36(x86-64)
 %package -n stash-origin
 Summary: The OSG Data Federation origin server
 
-Requires: %{name} = %{version}
+Requires: %{name} >= %{version}
 Requires: wget
 Requires: xrootd-client
 
@@ -124,7 +124,7 @@ Conflicts: osg-xrootd-standalone
 %package -n stash-cache
 Summary: The OSG data federation cache server
 
-Requires: %{name} = %{version}
+Requires: %{name} >= %{version}
 Requires: wget
 Requires: xrdcl-http
 Requires: xrootd-tcp-stats
@@ -310,6 +310,10 @@ mkdir -p %{buildroot}%{_sysconfdir}/grid-security/xrd
 %config %{_sysconfdir}/xrootd/config.d/03-redir-tuning.cfg
 
 %changelog
+* Tue Dec 17 2024 Mátyás Selmeci <matyas@cs.wisc.edu> - 3.7.0-2
+- Relax main package version requirement in stash-cache and stash-origin subpackages
+  to make upgrades to OSG 24 easier (SOFTWARE-6045)
+
 * Fri Mar 22 2024 Mátyás Selmeci <matyas@cs.wisc.edu> - 3.7.0-1
 - Make use of grid-mapfile downloaded from Topology.
   Requires osg-xrootd >= 3.6-24 (for OSG 3.6) or >= 23-6 (for OSG 23)
