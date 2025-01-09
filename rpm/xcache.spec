@@ -1,7 +1,7 @@
 Name:      xcache
 Summary:   XCache scripts and configurations
 Version:   3.7.0
-Release:   2%{?dist}
+Release:   3%{?dist}
 License:   Apache 2.0
 Group:     Grid
 URL:       https://osg-htc.org/docs/
@@ -52,6 +52,7 @@ Requires: xrootd-server >= 1:5.1.0
 # Use common OSG XRootD configuration
 Requires: osg-xrootd >= 3.6
 
+Suggests: osg-ca-certs
 Requires: grid-certificates >= 7
 Requires: vo-client
 Requires: fetch-crl
@@ -310,6 +311,9 @@ mkdir -p %{buildroot}%{_sysconfdir}/grid-security/xrd
 %config %{_sysconfdir}/xrootd/config.d/03-redir-tuning.cfg
 
 %changelog
+* Thu Jan 9 2025 Matt Westphall <westphall@wisc.edu> - 3.7.0-3
+- Add suggests: osg-ca-certs to satisfy grid-certificates (SOFTWARE-6051)
+
 * Tue Dec 17 2024 Mátyás Selmeci <matyas@cs.wisc.edu> - 3.7.0-2
 - Relax main package version requirement in stash-cache and stash-origin subpackages
   to make upgrades to OSG 24 easier (SOFTWARE-6045)
